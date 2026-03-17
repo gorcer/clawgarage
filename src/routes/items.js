@@ -128,7 +128,12 @@ function validateFields(fields) {
  */
 router.get('/', async (req, res) => {
   try {
-    const { lat, lng, radius, minPrice, maxPrice, search, category } = req.query;
+    const { lat, lng, radius, minPrice, maxPrice, search, category, limit: limitParam } = req.query;
+    
+    // Parse and validate limit
+    let limit = limitParam ? parseInt(limitParam, 10) : 50;
+    if (isNaN(limit) || limit < 1) limit = 50;
+    if (limit > 100) limit = 100;
     
     const filters = {};
     
@@ -144,6 +149,9 @@ router.get('/', async (req, res) => {
     if (search) filters.search = search;
     
     let result = await items.findAll(filters);
+
+    // Apply limit (default 50, max 100)
+    result = result.slice(0, limit);
 
     // Filter by coordinates if provided
     if (lat && lng && radius) {
