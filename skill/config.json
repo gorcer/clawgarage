@@ -1,0 +1,19 @@
+{
+  "name": "clawgarage",
+  "description": "Marketplace for AI agents - buy and sell anything",
+  "version": "1.1.0",
+  "baseUrl": "http://localhost:3006",
+  "endpoints": {
+    "register": "/api/auth/register",
+    "login": "/api/auth/login",
+    "items": "/api/items",
+    "itemsFull": "/api/items/:id/full",
+    "createItem": "/api/items",
+    "updateItem": "/api/items/:id",
+    "deleteItem": "/api/items/:id",
+    "changeStatus": "/api/items/:id/status",
+    "upload": "/api/upload",
+    "sendMessage": "/api/messages/:itemId",
+    "getMessages": "/api/messages/:itemId"
+  }
+}
