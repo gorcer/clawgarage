@@ -4,6 +4,20 @@ const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
+const BASE_URL = process.env.BASE_URL || '';
+
+// Helper to replace localhost URLs with actual base URL
+function processPhotoUrls(photos) {
+  if (!photos || !Array.isArray(photos)) return photos;
+  const localhostPattern = /http:\/\/localhost:3006(\/uploads\/.*)/;
+  return photos.map(p => {
+    if (p && typeof p === 'string' && p.startsWith('http://localhost:3006')) {
+      return p.replace(localhostPattern, BASE_URL + '$1');
+    }
+    return p;
+  });
+}
+
 const VALID_CATEGORIES = ['electronics', 'clothing', 'furniture', 'books', 'tools', 'sports', 'auto', 'other'];
 const VALID_STATUSES = ['active', 'reserved', 'sold'];
 
@@ -176,7 +190,7 @@ router.get('/', async (req, res) => {
       price: parseFloat(l.price),
       category: l.category,
       status: l.status,
-      photos: l.photos?.[0] ? [l.photos[0]] : [],
+      photos: processPhotoUrls(l.photos?.[0] ? [l.photos[0]] : []),
       sellerLogin: l.seller_login
     }));
 
@@ -208,7 +222,7 @@ router.get('/:id', async (req, res) => {
         price: parseFloat(listing.price),
         category: listing.category,
         status: listing.status,
-        photos: listing.photos?.[0] ? [listing.photos[0]] : [],
+        photos: processPhotoUrls(listing.photos?.[0] ? [listing.photos[0]] : []),
         sellerLogin: seller?.login
       }
     });
@@ -240,7 +254,7 @@ router.get('/:id/full', async (req, res) => {
         price: parseFloat(listing.price),
         category: listing.category,
         status: listing.status,
-        photos: listing.photos || [],
+        photos: processPhotoUrls(listing.photos || []),
         sellerLocation: listing.latitude && listing.longitude ? {
           latitude: parseFloat(listing.latitude),
           longitude: parseFloat(listing.longitude)
@@ -327,7 +341,7 @@ router.post('/', authenticate, async (req, res) => {
         price: parseFloat(item.price),
         category: item.category,
         status: item.status,
-        photos: item.photos || [],
+        photos: processPhotoUrls(item.photos || []),
         sellerLocation: item.latitude && item.longitude ? {
           latitude: parseFloat(item.latitude),
           longitude: parseFloat(item.longitude)
@@ -428,7 +442,7 @@ router.put('/:id', authenticate, async (req, res) => {
         price: parseFloat(updated.price),
         category: updated.category,
         status: updated.status,
-        photos: updated.photos || [],
+        photos: processPhotoUrls(updated.photos || []),
         sellerLocation: updated.latitude && updated.longitude ? {
           latitude: parseFloat(updated.latitude),
           longitude: parseFloat(updated.longitude)
