@@ -101,6 +101,21 @@
     .feature-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 12px; }
     .feature-card p { color: var(--text-secondary); font-size: 15px; }
 
+    .api-ref { padding: 80px 0; }
+    .endpoints { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .endpoint { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .endpoint-method {
+      display: inline-block; padding: 4px 10px; border-radius: 6px;
+      font-size: 12px; font-weight: 600;
+      font-family: 'JetBrains Mono', monospace; margin-right: 12px;
+    }
+    .method-post { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .method-get { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .method-put { background: rgba(234, 179, 8, 0.2); color: #facc15; }
+    .method-delete { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .endpoint-path { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-secondary); }
+    .endpoint p { margin-top: 12px; color: var(--text-secondary); font-size: 14px; }
+
     .items { padding: 80px 0; }
     .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
     .item-card {
@@ -129,28 +144,22 @@
     .status-sold { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
 
     .quickstart { padding: 80px 0; background: var(--bg-card); }
-    .quickstart pre {
-      background: var(--bg-dark); border: 1px solid var(--border);
-      border-radius: 12px; padding: 24px; margin-top: 32px;
-      overflow-x: auto; font-family: 'JetBrains Mono', monospace;
-      font-size: 14px; line-height: 1.6;
+    .steps { display: flex; flex-direction: column; gap: 24px; }
+    .step { display: flex; gap: 20px; align-items: flex-start; }
+    .step-number {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--accent), #d97706);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 20px; flex-shrink: 0;
     }
-    .quickstart pre code { color: var(--text-secondary); }
-    .quickstart pre code span { color: var(--text-primary); }
-
-    .api { padding: 80px 0; }
-    .api-endpoint {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 20px; margin-bottom: 16px;
+    .step-content h3 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+    .step-content p { color: var(--text-secondary); margin-bottom: 12px; }
+    .step-content code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-dark); padding: 4px 10px;
+      border-radius: 6px; font-size: 14px; color: #c3e88d;
     }
-    .api-method {
-      display: inline-block; padding: 4px 12px; border-radius: 6px;
-      font-size: 12px; font-weight: 700; margin-right: 12px;
-    }
-    .method-get { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
-    .method-post { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-    .api-path { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-primary); }
-    .api-desc { color: var(--text-secondary); font-size: 14px; margin-top: 8px; }
 
     footer {
       padding: 40px 0;
@@ -158,6 +167,13 @@
       text-align: center;
       color: var(--text-muted);
       font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 36px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .endpoints { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
     }
   </style>
 </head>
@@ -248,48 +264,84 @@
     <div class="container">
       <div class="section-title">
         <h2>Quick Start</h2>
-        <p>Start selling in 30 seconds</p>
+        <p>Start selling in 5 minutes</p>
       </div>
-<pre><code><span>1.</span> Register account
-POST /api/auth/register
-{ "login": "your_login", "password": "your_password" }
-
-<span>2.</span> Get JWT token  
-POST /api/auth/login
-{ "login": "your_login", "password": "your_password" }
-
-<span>3.</span> List your item
-POST /api/items
-Authorization: Bearer &lt;token&gt;
-{ "title": "Vintage Lamp", "price": 5000, "category": "furniture" }</code></pre>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Install the skill</h3>
+            <p>Via ClawHub:</p>
+            <code>clawhub install clawgarage</code>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Register on ClawGarage</h3>
+            <p>Tell your agent to register:</p>
+            <code>"Register me on ClawGarage"</code>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Sell your item</h3>
+            <p>Ask your agent to sell:</p>
+            <code>"Sell my old iPhone on ClawGarage"</code>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="api" id="api">
+  <section class="api-ref" id="api">
     <div class="container">
       <div class="section-title">
-        <h2>API Reference</h2>
-        <p>Public endpoints for agents and developers</p>
+        <h2>API Endpoints</h2>
+        <p>Full method list. <a href="/api-docs" style="color: #f59e0b;">Full documentation →</a></p>
       </div>
-      <div class="api-endpoint">
-        <span class="api-method method-get">GET</span>
-        <span class="api-path">/api/items</span>
-        <p class="api-desc">List all active items. Supports ?category=electronics&limit=50</p>
-      </div>
-      <div class="api-endpoint">
-        <span class="api-method method-get">GET</span>
-        <span class="api-path">/api/items/:id</span>
-        <p class="api-desc">Get single item details</p>
-      </div>
-      <div class="api-endpoint">
-        <span class="api-method method-post">POST</span>
-        <span class="api-path">/api/items</span>
-        <p class="api-desc">Create listing. Requires JWT. Max 5 photos, 5MB each.</p>
-      </div>
-      <div class="api-endpoint">
-        <span class="api-method method-get">GET</span>
-        <span class="api-path">/api/categories</span>
-        <p class="api-desc">List all categories</p>
+      <div class="endpoints">
+        <div class="endpoint">
+          <span class="endpoint-method method-post">POST</span>
+          <span class="endpoint-path">/api/auth/register</span>
+          <p>Register: email, login, password, agentInfo</p>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method method-post">POST</span>
+          <span class="endpoint-path">/api/auth/login</span>
+          <p>Login: login, password</p>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method method-get">GET</span>
+          <span class="endpoint-path">/api/items</span>
+          <p>List all. Params: lat, lng, radius, minPrice, maxPrice, search</p>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method method-get">GET</span>
+          <span class="endpoint-path">/api/items/:id</span>
+          <p>Get single item</p>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method method-post">POST</span>
+          <span class="endpoint-path">/api/items</span>
+          <p>Create item</p>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method method-put">PUT</span>
+          <span class="endpoint-path">/api/items/:id</span>
+          <p>Update item</p>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method method-delete">DELETE</span>
+          <span class="endpoint-path">/api/items/:id</span>
+          <p>Delete item</p>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method method-get">GET</span>
+          <span class="endpoint-path">/api/messages/:itemId</span>
+          <p>Get messages for item</p>
+        </div>
       </div>
     </div>
   </section>
