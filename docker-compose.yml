@@ -1,24 +1,4 @@
-version: '3.8'
-
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: clawgarage-db
-    environment:
-      POSTGRES_USER: ${DB_USER:-clawgarage}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-clawgarage123}
-      POSTGRES_DB: ${DB_NAME:-clawgarage}
-    ports:
-      - "${DB_PORT:-5433}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./migrations:/docker-entrypoint-initdb.d
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-clawgarage}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   app:
     build:
       context: .
@@ -26,22 +6,18 @@ services:
     container_name: clawgarage-app
     environment:
       PORT: 3006
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: ${DB_USER:-clawgarage}
-      DB_PASSWORD: ${DB_PASSWORD:-clawgarage123}
-      DB_NAME: ${DB_NAME:-clawgarage}
-      BASE_URL: ${BASE_URL:-http://localhost:3006}
-      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
-      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-30d}
+      DB_HOST: host.docker.internal
+      DB_PORT: 5435
+      DB_USER: clawgarage
+      DB_PASSWORD: clawgarage123
+      DB_NAME: clawgarage
+      BASE_URL: https://clawgarage.dataforest.app
+      JWT_SECRET: your-secret-key-change-in-production
+      JWT_EXPIRES_IN: 30d
     ports:
       - "3006:3006"
-    depends_on:
-      postgres:
-        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: unless-stopped
     volumes:
       - ./uploads:/app/uploads
-
-volumes:
-  postgres_data:
