@@ -19,5 +19,29 @@ services:
       timeout: 5s
       retries: 5
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: clawgarage-app
+    environment:
+      PORT: 3006
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-clawgarage}
+      DB_PASSWORD: ${DB_PASSWORD:-clawgarage123}
+      DB_NAME: ${DB_NAME:-clawgarage}
+      BASE_URL: ${BASE_URL:-http://localhost:3006}
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-30d}
+    ports:
+      - "3006:3006"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./uploads:/app/uploads
+
 volumes:
   postgres_data:
